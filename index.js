@@ -1,23 +1,32 @@
 const fs = require("fs");
-const express = require("express");
-const app = express();
+const http = require("http");
 
-app.get("/", (req, res) => {
-  res.sendFile("./views/index.html", { root: __dirname });
+const server = http.createServer((req, res) => {
+  if (req.url === "/") {
+    fs.readFile("./views/index.html", (err, data) => {
+      if (err) throw err;
+      res.writeHead(200, { "Content-Type": "text/html" });
+      return res.end(data);
+    });
+  } else if ((req.url = "/about")) {
+    fs.readFile("./views/about.html", (err, data) => {
+      if (err) throw err;
+      res.writeHead(200, { "Content-Type": "text/html" });
+      return res.end(data);
+    });
+  } else if ((req.url = "/contact")) {
+    fs.readFile("./views/contact.html", (err, data) => {
+      if (err) throw err;
+      res.writeHead(200, { "Content-Type": "text/html" });
+      return res.end(data);
+    });
+  } else {
+    fs.readFile("./views/404.html", (err, data) => {
+      if (err) throw err;
+      res.writeHead(404, { "Content-Type": "text/html" });
+      return res.end(data);
+    });
+  }
 });
 
-app.get("/about", (req, res) => {
-  res.sendFile("./views/about.html", { root: __dirname });
-});
-
-app.get("/about-us", (req, res) => {
-  res.redirect("/about");
-});
-
-app.use((req, res) => {
-    res.status(404).sendFile("./views/404.html", {root: __dirname})
-})
-
-app.listen(8080, () => {
-  console.log("Listening to server on Port: 8080");
-});
+server.listen(8080);
